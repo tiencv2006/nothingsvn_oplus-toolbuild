@@ -95,15 +95,11 @@ for pname in ${super_list}; do
     fi
 done
 
-if [[ $localbuild != "y" ]]; then
-    bash $work_dir/bin/ddevice/packROM.sh n
-else
+if [[ $localbuild = "y" ]]; then
     bash $work_dir/bin/ddevice/packROM.sh y
 fi
 
-if [[ $localbuild != "y" ]]; then
-    bash $work_dir/bin/ddevice/uploadROM.sh
-elif [[ $localbuild = "y" ]]; then
+if [[ $localbuild = "y" ]]; then
     cp -rf $work_dir/bin/default/script/* $work_dir/bin/script2flash/META-INF/Data/
     cp -rf $work_dir/bin/default/device/* $work_dir/bin/ddevice/
 fi

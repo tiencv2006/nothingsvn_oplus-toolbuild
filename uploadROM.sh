@@ -4,9 +4,8 @@ ANDROID_VER=$(cat $work_dir/bin/ddevice/androidver.txt)
 DEVICE_MODEL=$(cat $work_dir/bin/ddevice/device_model.txt)
 BASE_BUILD_ID=$(cat $work_dir/bin/ddevice/base_build_id.txt)
 BRAND=$(cat $work_dir/bin/ddevice/brand.txt)
-RCLONE_CONFIG_1DRIVE="$work_dir/rclone/rclone_1drive.conf"
+RCLONE_CONFIG_1DRIVE="$work_dir/rclone"
 ONEDRIVE_REMOTE="starxONEDRIVE"
-
 
 if [[ $(git branch --show-current) == "beta" ]]; then
     VERSION="$(cat $work_dir/Version)"

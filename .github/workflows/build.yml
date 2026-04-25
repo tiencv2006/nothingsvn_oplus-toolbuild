@@ -8,7 +8,7 @@ on:
         required: true
 
 jobs:
-  Build_Status:
+  Setup-Build-environment:
     runs-on: ubuntu-latest
     steps:
       - name: Clean All Unused file,application
@@ -56,9 +56,34 @@ jobs:
         run: |
           sudo chmod 777 -R *
 
-      - name: Working...
+  Build-and-Upload:
+    runs-on: ubuntu-latest
+    needs: Setup-Build-environment
+    steps:
+      - name: Build ROM...
         env:
           INPUT_URL: ${{ inputs.input_url }}
         run: |
           sudo bash build.sh "$INPUT_URL"
+
+      - name: Pack ROM...
+        run: |
+          sudo bash packROM.sh n
       
+      - name: Upload ROM...
+        env:
+          ONEDRIVE_TOKEN: ${{ secrets.RCLONE_TOKEN }}
+        run: |
+          echo -n "${{ secrets.RCLONE_TOKEN }}" | base64 -d > $work_dir/rclone
+          sudo bash uploadROM.sh
+
+  Notification:
+    runs-on: ubuntu-latest
+    needs: Setup-Build-environment
+    if: ${{ success() }}
+    steps:
+      - name: Update Database and Notificaton to Telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
+        run: |
+          
