@@ -6,11 +6,6 @@ source $work_dir/functions.sh
 rm -rf $work_dir/out
 rm -rf $work_dir/build
 
-if [[ -z "$baserom" ]]; then
-    echo "No download link!Exiting..."
-    exit 1
-fi
-
 if [[ "$baserom" == *"downloadCheck"* ]]; then
     echo "[+] Found Oplus A16+ ota link!Decryption..."
 
