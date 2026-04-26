@@ -50,6 +50,7 @@ if [ -f $work_dir/${baserom}.zip ]; then
     rm -rf ${baserom}.zip
 fi
 rm -rf build/baserom/payload.bin
+bash $work_dir/bin/package/install.sh
 
 remove_fsv "$work_dir/build/baserom/images/system/system/framework"
 remove_fsv "$work_dir/build/baserom/images/system_ext"

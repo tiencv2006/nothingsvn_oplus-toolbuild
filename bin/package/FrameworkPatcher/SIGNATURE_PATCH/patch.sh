@@ -1,5 +1,5 @@
 dir=$(pwd)
-dissign="$dir/bin/shPlugin/SIGNATURE_PATCH/getMinimum.config.ini"
+dissign="$dir/bin/package/FrameworkPatcher/SIGNATURE_PATCH/getMinimum.config.ini"
 sdkLevel=$(cat $dir/bin/ddevice/sdkLevel.txt)
 JARDIR="$dir/jar_temp"
 repS="python3 $dir/bin/strRep.py"

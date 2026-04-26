@@ -1,101 +1,178 @@
-#!/bin/bash
+dir=$(pwd)
+sdkLevel=$(cat $dir/bin/ddevice/sdkLevel.txt)
+patch="python3 $dir/bin/package/FrameworkPatcher/KouseiPatcher/toolbox.py"
+JARDIR="$dir/jar_temp"
 
-# Set up environment variables
-TOOLS_DIR="$(pwd)/bin/apktool"
-WORK_DIR="$(pwd)"
-BACKUP_DIR="$WORK_DIR/backup"
-SCRIPT_DIR="$WORK_DIR/bin/shPlugin/KouseiPatcher"
+if [[ ! -d $dir/jar_temp ]]; then
 
-# Source helper functions
-source "$SCRIPT_DIR/core/logging.sh"
-source "$SCRIPT_DIR/core/tools.sh"
-source "$SCRIPT_DIR/core/apk_ops.sh"
-source "$SCRIPT_DIR/core/kaorios_patches.sh"
+	mkdir $dir/jar_temp
+	
+fi
 
-# Create backup directory
-mkdir -p "$BACKUP_DIR"
-
-# Function to decompile JAR file
-decompile_jar() {
-    local jar_file="$1"
-    local base_name
-    base_name="$(basename "$jar_file" .jar)"
-    local output_dir="$WORK_DIR/${base_name}_decompile"
-
-    echo "Decompiling $jar_file with apktool..."
-
-    if [ ! -f "$jar_file" ]; then
-        echo "❌ Error: JAR file $jar_file not found!"
-        exit 1
-    fi
-
-    rm -rf "$output_dir" "$base_name"
-    mkdir -p "$output_dir"
-
-    mkdir -p "$BACKUP_DIR/$base_name"
-    unzip -o "$jar_file" "META-INF/*" "res/*" -d "$BACKUP_DIR/$base_name" >/dev/null 2>&1
-
-    if ! java -jar "$TOOLS_DIR/apktool.jar" d -q -f "$jar_file" -o "$output_dir"; then
-        echo "❌ Error: Failed to decompile $jar_file with apktool"
-        exit 1
-    fi
-
-    mkdir -p "$output_dir/unknown"
-    cp -r "$BACKUP_DIR/$base_name/res" "$output_dir/unknown/" 2>/dev/null
-    cp -r "$BACKUP_DIR/$base_name/META-INF" "$output_dir/unknown/" 2>/dev/null
+get_file_dir() {
+	if [[ $1 ]]; then
+		sudo find $dir/build/baserom/images/ -name $1 
+	else 
+		return 0
+	fi
 }
 
-# Function to recompile JAR file
-recompile_jar() {
-    local jar_file="$1"
-    local base_name
-    base_name="$(basename "$jar_file" .jar)"
-    local output_dir="$WORK_DIR/${base_name}_decompile"
-    local patched_jar="${base_name}_patched.jar"
-
-    echo "Recompiling $jar_file with apktool..."
-
-    if ! java -jar "$TOOLS_DIR/apktool.jar" b -q -f "$output_dir" -o "$patched_jar"; then
-        echo "❌ Error: Failed to recompile $output_dir with apktool"
-        exit 1
+jar_util() 
+{
+    cd $dir
+    #binary
+    if [[ $3 == "fw" ]]; then 
+        bak="java -jar $dir/bin/apktool/baksmali.jar d --api $sdkLevel"
+        sma="java -jar $dir/bin/apktool/smali.jar a --api $sdkLevel"
     fi
 
-    echo "Created patched JAR: $patched_jar"
+    if [[ $1 == "d" ]]; then
+        echo -ne "====> Patching $2 : "
+
+        file_path=$(get_file_dir $2)
+        if [[ $file_path ]]; then
+            sudo cp "$file_path" $dir/jar_temp
+            sudo chown $(whoami) $dir/jar_temp/$2
+            unzip $dir/jar_temp/$2 -d $dir/jar_temp/$2.out  >/dev/null 2>&1
+            if [[ -d $dir/jar_temp/"$2.out" ]]; then
+                rm -rf $dir/jar_temp/$2
+                for dex in $(find $dir/jar_temp/"$2.out" -maxdepth 1 -name "*dex" ); do
+                    if [[ $4 ]]; then
+                        if [[ ! "$dex" == *"$4"* ]]; then
+                            $bak $dex -o "$dex.out"
+                            [[ -d "$dex.out" ]] && rm -rf $dex
+                        fi
+                    else
+                        $bak $dex -o "$dex.out"
+                        [[ -d "$dex.out" ]] && rm -rf $dex        
+                    fi
+                done
+                # # Create necessary directories and copy xBuild.smali
+                # mkdir -p $dir/jar_temp/$2.out/classes.dex.out/miuix/os
+                # cp $dir/bin/shPlugin/noti/xBuild.smali $dir/jar_temp/$2.out/classes.dex.out/miuix/os/
+            fi
+        fi
+    else 
+        if [[ $1 == "a" ]]; then 
+            if [[ -d $dir/jar_temp/$2.out ]]; then
+                cd $dir/jar_temp/$2.out
+                for fld in $(find -maxdepth 1 -name "*.out" ); do
+                    if [[ $4 ]]; then
+                        if [[ ! "$fld" == *"$4"* ]]; then
+                            $sma $fld -o $(echo ${fld//.out})
+                            [[ -f $(echo ${fld//.out}) ]] && rm -rf $fld
+                        fi
+                    else 
+                        $sma $fld -o $(echo ${fld//.out})
+                        [[ -f $(echo ${fld//.out}) ]] && rm -rf $fld    
+                    fi
+                done
+                7za a -tzip -mx=0 $dir/jar_temp/$2_notal $dir/jar_temp/$2.out/. >/dev/null 2>&1
+                #zip -r -j -0 $dir/jar_temp/$2_notal $dir/jar_temp/$2.out/.
+                zipalign 4 $dir/jar_temp/$2_notal $dir/jar_temp/$2
+                if [[ -f $dir/jar_temp/$2 ]]; then
+                    sudo cp -rf $dir/jar_temp/$2 $(get_file_dir $2)
+                    echo "Success"
+                    rm -rf $dir/jar_temp/$2.out $dir/jar_temp/$2_notal 
+                else
+                    echo "Fail"
+                fi
+            fi
+        fi
+    fi
 }
 
-# Main function
-main() {
-    local framework_path
-    framework_path="$WORK_DIR/build/baserom/images/system/system/framework/framework.jar"
+mvsml() {
+    local file_name="$1"
+    local target_folder="$2"
+    local framework_dir="$work_dir/jar_temp/framework.jar.out"
 
-    echo "Starting framework patch..."
+    # Search for the smali file within the framework directory
+    file_path=$(find "$framework_dir" -type f -name "$file_name")
+
+    if [ -z "$file_path" ]; then
+        echo "File $file_name not found in any dex folder within $framework_dir."
+        return 1
+    fi
+
+    # Extract the parent dex folder and the relative path from it
+    parent_dex_folder=$(dirname "$file_path" | sed "s|$framework_dir/||" | cut -d/ -f1)
+    relative_path=$(echo "$file_path" | sed "s|$framework_dir/$parent_dex_folder/||")
+
+    # Construct the new target path, preserving subdirectories
+    target_path="$target_folder/$relative_path"
+
+    # Ensure the target directory exists
+    mkdir -p "$(dirname "$target_path")"
+
+    # Move the file
+    mv "$file_path" "$target_path"
+
+    echo "Moved $file_name to $target_path"
+}
+
+mvdir() {
+    local folder_name="$1"
+    local target_folder="$2"
+    local framework_dir="$work_dir/jar_temp/framework.jar.out"
+
+    # Search for the folder within the framework directory
+    folder_path=$(find "$framework_dir" -type d -name "$folder_name")
+
+    if [ -z "$folder_path" ]; then
+        echo "Folder $folder_name not found in any dex folder within $framework_dir."
+        return 1
+    fi
+
+    # Loop through all .smali files in the found folder
+    find "$folder_path" -type f -name "*.smali" | while read -r file_path; do
+        # Extract the relative path from the framework_dir
+        parent_dex_folder=$(dirname "$file_path" | sed "s|$framework_dir/||" | cut -d/ -f1)
+        relative_path=$(echo "$file_path" | sed "s|$framework_dir/$parent_dex_folder/||")
+
+        # Construct the new target path, preserving subdirectories
+        target_path="$target_folder/$relative_path"
+
+        # Ensure the target directory exists
+        mkdir -p "$(dirname "$target_path")"
+
+        # Move the file
+        mv "$file_path" "$target_path"
+    done
+
+    echo "Moved all .smali files from $folder_name to $target_folder"
+}
+
+
+Patch_Framework () {
+
+    jar_util d 'framework.jar' fw 0 10
+
+    FRAMEWORK_DIR="$work_dir/jar_temp/framework.jar.out"
+    $patch $dir/jar_temp/framework.jar.out
+    max_dex=$(find "$FRAMEWORK_DIR" -maxdepth 1 -name "classes*.dex.out" | sed 's/.*classes\([0-9]*\)\.dex\.out/\1/' | sort -rn | head -1)
+    new_dex=$((max_dex + 1))
+    new_dex_folder="$FRAMEWORK_DIR/classes$new_dex.dex.out"
+    mkdir -p "$new_dex_folder"
+    mvsml "AndroidKeyStoreSpi.smali" "$new_dex_folder" >/dev/null 2>&1
+    mvsml "Instrumentation.smali" "$new_dex_folder" >/dev/null 2>&1
+    mvsml "AndroidKeyStoreKeyPairGeneratorSpi.smali" "$new_dex_folder" >/dev/null 2>&1
+    mvsml "ApplicationPackageManager.smali" "$new_dex_folder" >/dev/null 2>&1
+    cp -rf $dir/bin/package/FrameworkPatcher/KouseiPatcher/smail/* $new_dex_folder
     
-    # Decompile framework.jar
-    decompile_jar "$framework_path"
-    local decompile_dir="$WORK_DIR/framework_decompile"
+    jar_util a 'framework.jar' fw 0 10
 
-    # Apply Kaorios Toolbox patches
-    apply_kaorios_toolbox_patches "$decompile_dir"
-
-    # Recompile framework.jar
-    recompile_jar "$framework_path"
-    ensure_tools
-
-    local base_name
-    base_name="$(basename "$framework_path" .jar)"
-    local patched_jar="${base_name}_patched.jar"
-    if [ -f "$patched_jar" ]; then
-       log "Patched Framework done!"
-       mv "framework_patched.jar" "framework.jar"
-    else
-        echo "❌ Error: Patched JAR not found at $patched_jar"
-    fi
-
-    # Clean up
-    rm -rf "$decompile_dir"
-    rm -rf "backup"
-
-    echo "Framework patching completed."
 }
 
-main "$@"
+Patch_services () {
+
+    jar_util d 'services.jar' fw 0 10
+
+    $patch $dir/jar_temp/services.jar.out --services
+    
+    jar_util a 'services.jar' fw 0 10
+
+}
+
+Patch_Framework
+Patch_services
