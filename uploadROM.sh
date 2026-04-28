@@ -24,10 +24,10 @@ RCLONE_CONFIG_1DRIVE="$work_dir/config/rclone.conf"
 ONEDRIVE_REMOTE="starxONEDRIVE"
 
 if [[ $(git branch --show-current) == "beta" ]]; then
-    VERSION="$(cat $work_dir/config/Version)"
+    VERSION="$(cat $work_dir/config/Version.conf)"
  	status="Beta"
 else
-    VERSION="$(cat $work_dir/config/Version)"
+    VERSION="$(cat $work_dir/config/Version.conf)"
  	status="Official"
 fi
 
