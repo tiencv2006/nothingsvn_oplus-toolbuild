@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0
 
 if [ "$1" == "setup" ]; then
   if [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then

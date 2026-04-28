@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0
 
 dir=$(pwd)
 dissign="$dir/bin/package/FrameworkPatcher/SIGNATURE_PATCH/getMinimum.config.ini"

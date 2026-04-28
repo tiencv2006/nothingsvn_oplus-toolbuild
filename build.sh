@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0
 
 baserom="$1"
 localbuild="$2"
