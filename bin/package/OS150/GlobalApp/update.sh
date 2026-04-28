@@ -1,3 +1,5 @@
+#!/bin/bash
+
 work_dir=$(pwd)
 source $work_dir/functions.sh
 MAIN_FOLDER="$work_dir/build/baserom/images"

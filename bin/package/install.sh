@@ -1,3 +1,5 @@
+#!/bin/bash
+
 work_dir=$(pwd)
 source $work_dir/bin/ddevice/fetchINFO.sh
 BASE_REGION=$(cat $work_dir/bin/ddevice/rom_region.txt)

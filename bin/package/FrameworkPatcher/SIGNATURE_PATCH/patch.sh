@@ -1,3 +1,5 @@
+#!/bin/bash
+
 dir=$(pwd)
 dissign="$dir/bin/package/FrameworkPatcher/SIGNATURE_PATCH/getMinimum.config.ini"
 sdkLevel=$(cat $dir/bin/ddevice/sdkLevel.txt)

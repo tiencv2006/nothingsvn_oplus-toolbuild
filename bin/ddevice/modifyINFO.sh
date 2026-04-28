@@ -1,3 +1,5 @@
+#!/bin/bash
+
 baserom="$1"
 work_dir=$(pwd)
 source $work_dir/functions.sh

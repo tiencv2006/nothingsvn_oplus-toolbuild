@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$1" == "setup" ]; then
   if [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
     echo "[ERROR] - Please provide rclone token and remote name"

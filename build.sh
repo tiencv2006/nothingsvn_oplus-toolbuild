@@ -1,3 +1,5 @@
+#!/bin/bash
+
 baserom="$1"
 localbuild="$2"
 work_dir=$(pwd)

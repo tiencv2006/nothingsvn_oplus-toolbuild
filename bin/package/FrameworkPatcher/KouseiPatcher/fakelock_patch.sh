@@ -1,3 +1,5 @@
+#!/bin/bash
+
 work_dir=$(pwd)
 magiskboot="$work_dir/bin/magiskboot"
 

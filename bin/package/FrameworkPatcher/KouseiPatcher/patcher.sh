@@ -1,3 +1,5 @@
+#!/bin/bash
+
 dir=$(pwd)
 sdkLevel=$(cat $dir/bin/ddevice/sdkLevel.txt)
 patch="python3 $dir/bin/package/FrameworkPatcher/KouseiPatcher/toolbox.py"

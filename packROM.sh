@@ -1,3 +1,5 @@
+#!/bin/bash
+
 work_dir=$(pwd)
 localbuild="$1"
 source $work_dir/functions.sh

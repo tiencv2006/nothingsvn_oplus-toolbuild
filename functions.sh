@@ -1,4 +1,5 @@
 #!/bin/bash
+
 WORK_DIR=$(pwd)
 # Define color output function
 error() {
