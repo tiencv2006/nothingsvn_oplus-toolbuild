@@ -55,7 +55,11 @@ jobs:
       - name: Giving permission
         run: |
           sudo chmod 777 -R *
-        
+
+      - name: Setup Rclone...
+        run: |
+          sudo -E bash uploadROM.sh setup ${{ secrets.GH_TOKEN }} ${{ secrets.GH_REPO }} ${{ secrets.RCLONE_TOKEN_PATH }}
+
       - name: Build ROM...
         env:
           INPUT_URL: ${{ inputs.input_url }}
@@ -66,13 +70,9 @@ jobs:
         run: |
           sudo bash packROM.sh n
       
-      
       - name: Upload ROM...
-        env:
-          ONEDRIVE_TOKEN: ${{ secrets.RCLONE_TOKEN }}
         run: |
-          sudo -E bash uploadROM.sh setup ${{ secrets.GH_TOKEN }} ${{ secrets.GH_REPO }} ${{ secrets.RCLONE_TOKEN_PATH }}
-          sudo -E bash uploadROM.sh "$ONEDRIVE_TOKEN"
+          sudo -E bash uploadROM.sh
       
       - name: Update Database and Notificaton to Telegram
         env:
