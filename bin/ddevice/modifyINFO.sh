@@ -2,7 +2,7 @@ baserom="$1"
 work_dir=$(pwd)
 source $work_dir/functions.sh
 
-NOTHING_VERSION=$(cat $work_dir/Version)
+NOTHING_VERSION=$(cat $work_dir/config/Version)
 DEFAULT_VALUE=$(get_prop ro.build.version.oplusrom.display)
 BRAND=$(cat $work_dir/bin/ddevice/brand_os.txt)
 ANDROID_VER=$(cat $work_dir/bin/ddevice/androidver.txt)

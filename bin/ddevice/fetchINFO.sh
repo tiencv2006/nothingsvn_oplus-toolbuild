@@ -11,7 +11,7 @@ CODENAME=$(get_prop ro.product.odm.device)
 BUILD_ID="$work_dir/bin/ddevice/base_build_id.txt"
 DATA="$work_dir/bin/ddevice/data/devices_data.txt"
 FILE_JSON1="$work_dir/bin/ddevice/data/devices.json"
-ntver=$(cat $work_dir/Version)
+ntver=$(cat $work_dir/config/Version)
 dir="$work_dir/build/baserom/images/config"
 patterns=(
     '\/my_product\/media\/theme\/uxicons\/hdpi\/com\.tencent\.mm\/'
