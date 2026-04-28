@@ -97,10 +97,7 @@ for pname in ${super_list}; do
 done
 
 if [[ $localbuild = "y" ]]; then
-    bash $work_dir/bin/ddevice/packROM.sh y
-fi
-
-if [[ $localbuild = "y" ]]; then
+    bash $work_dir/packROM.sh y
     cp -rf $work_dir/bin/default/script/* $work_dir/bin/script2flash/META-INF/Data/
     cp -rf $work_dir/bin/default/device/* $work_dir/bin/ddevice/
 fi
