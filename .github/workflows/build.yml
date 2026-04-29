@@ -11,6 +11,11 @@ on:
         required: true
         type: boolean
         default: true
+      install_mods:
+        description: 'Install mods to ROM?'
+        required: true
+        type: boolean
+        default: true
       
 jobs:
   Initialize:
@@ -43,7 +48,6 @@ jobs:
     needs: Initialize
     runs-on: ubuntu-latest
     steps:
-
       - name: Install Stuff
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test 
@@ -66,6 +70,19 @@ jobs:
         run: |
           sudo chmod 777 -R *
 
+      - name: Get environment build before install...
+        if: ${{ inputs.kaorios_toolbox }} == 'true'
+        run: |
+          echo "install_toolbox=true"
+        else:
+          echo "install_toolbox=false"
+          
+        if: ${{ inputs.install_mods }} == 'true'
+        run: |
+          echo "install_mods=true"
+        else:
+          echo "install_mods=false"
+          
       - name: Build ROM...
         env:
           INPUT_URL: ${{ inputs.input_url }}
