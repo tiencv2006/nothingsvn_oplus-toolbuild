@@ -51,15 +51,15 @@ elif [[ $BRAND == "RealmeUI" ]]; then
   uploaddir="RealmeUI"
 fi
 
-output_file="out/${NTBUILD}_${VERSION}_${DEVICE_MODEL}_OS${BASE_BUILD_ID}_${hash}_${status}.zip"
 hash=$(md5sum out/${NTBUILD}_${DEVICE_MODEL}_${ANDROID_VER}_OS${BASE_BUILD_ID}.zip |head -c 5)
 mv out/${NTBUILD}_${DEVICE_MODEL}_${ANDROID_VER}_OS${BASE_BUILD_ID}.zip out/${NTBUILD}_${VERSION}_${DEVICE_MODEL}_OS${BASE_BUILD_ID}_${hash}_${status}.zip
 echo "[SCRIPT] - Output: "
-echo "$(pwd)/out/${NTBUILD}_${VERSION}_${DEVICE_MODEL}_OS${BASE_BUILD_ID}_${hash}_${status}.zip"
+output_file="out/${NTBUILD}_${VERSION}_${DEVICE_MODEL}_OS${BASE_BUILD_ID}_${hash}_${status}.zip"
+echo "$output_file"
 echo "[ONEDRIVE] - Uploading"
 # 1drive
 rclone -v --config="$RCLONE_CONFIG_1DRIVE" copy "$output_file" "$ONEDRIVE_REMOTE:NTBuild/${uploaddir}/${VERSION}/${DEVICE_MODEL}/" || {
-echo "[ONEDRIVE] - Error uploading file to OneDrive: $FILENAME"
+echo "[ONEDRIVE] - Error uploading file to OneDrive: $output_file"
 exit 1
 }
 
