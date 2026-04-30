@@ -40,7 +40,7 @@ done
 echo "[DEBLOAT] - Debloat Done"
 
 setprop_rc "on boot" "setprop persist.maianh.region VN" "$work_dir/build/baserom/images/system/system/etc/init/hw/init.rc"
-aria2c -q -d "$work_dir/bin/extension165/extensionfile/globalapp/privapp/OppoGallery2/" -o OppoGallery2.apk https://github.com/tiencv2006/nothingsvn_oplus-toolbuild/releases/download/oplus/OppoGallery2_A16.apk && echo "[INFO] - Get File Successfully"
+aria2c -q -d "$work_dir/bin/package/OS160/GlobalApplication/privapp/OppoGallery2/" -o OppoGallery2.apk https://github.com/tiencv2006/nothingsvn_oplus-toolbuild/releases/download/oplus/OppoGallery2_A16.apk && echo "[INFO] - Get File Successfully"
 echo "[MODS] - Replace some app with global app..."
 cp -rf $ModFile/app/* $MAIN_FOLDER/my_stock/app/
 cp -rf $ModFile/delapp/* $MAIN_FOLDER/my_stock/del-app/
