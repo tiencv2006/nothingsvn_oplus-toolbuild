@@ -9,6 +9,8 @@
 [![Platform](https://img.shields.io/badge/platform-Linux%20x86__64-lightgrey.svg)](#)
 [![Telegram](https://img.shields.io/badge/Telegram-Community-2CA5E0?logo=telegram&logoColor=white)](https://t.me/nothingscom)
 
+**🌐 Language / Ngôn ngữ:** **English** | [Tiếng Việt](README_VI.MD)
+
 ---
 
 *Transform official OnePlus OEM firmware into a fully customized Global ROM — packed with Google Apps, AI fixes, and the KaoriOS Toolbox.*
@@ -37,7 +39,7 @@
                                                                       │
                      ┌──────────────┐     ┌──────────────┐            │
                      │   Upload to  │◀────│   Pack ROM   │◀───────────┘
-                     │   OneDrive   │     │    (.zip)     │
+                     │    (Cloud)    │     │    (.zip)     │
                      └──────────────┘     └──────────────┘
 ```
 
@@ -48,7 +50,7 @@ nothingsvn_oplus-toolbuild/
 ├── 📜 build.sh          # Main build orchestrator
 ├── 📜 functions.sh      # Shared utility functions
 ├── 📜 packROM.sh        # ROM packaging script
-├── 📜 uploadROM.sh      # OneDrive upload handler
+├── 📜 uploadROM.sh      # Cloud upload handler (Rclone/GH Releases)
 ├── 📜 setup.sh          # Environment setup
 ├── ⚙️ config.env         # Build configuration flags
 ├── 📄 Version           # Current version (v1.0)
@@ -66,16 +68,53 @@ Make sure the following tools are installed on your **Linux x86_64** system:
 unzip  aria2c  curl  7z  zip  java  zipalign  python3  zstd  bc  xmlstarlet  aapt
 ```
 
-### Build Locally
+Or use the setup script to install all required tools automatically:
+
+```bash
+bash setup.sh
+```
+
+### Build From Source
 
 ```bash
 # Clone the repository
 git clone https://github.com/tiencv2006/nothingsvn_oplus-toolbuild.git
 cd nothingsvn_oplus-toolbuild
-
-# Run the build (replace <ROM_FILE> with your OEM firmware path)
-bash build.sh <ROM_FILE> y
 ```
+
+**Option A** — Build from a firmware URL:
+
+```bash
+bash build.sh <URL_OF_FIRMWARE_OTA> y
+```
+
+**Option B** — Build from a local firmware file:
+
+```bash
+bash build.sh <PATH_TO_FIRMWARE_FILE> y
+```
+
+
+## ☁️ GitHub Actions (CI/CD)
+
+You can also build ROMs automatically in the cloud using **GitHub Actions**.
+
+#### 🔑 Required Secrets
+
+| Secret | Description |
+|--------|-------------|
+| `GH_REPO` | Your GitHub account/repo (`username/repo_name`) |
+| `GH_TOKEN` | Your GitHub personal access token |
+| `RCLONE_TOKEN_PATH` | Path to your `rclone.conf` file |
+
+#### 📥 Workflow Inputs
+
+| Input | Description |
+|-------|-------------|
+| `ROM_URL` | URL of the official OEM firmware OTA |
+
+> [!TIP]
+> You can use **Rclone** (OneDrive, Google Drive, MEGA) or upload directly to **GitHub Releases** — customize the upload target in `uploadROM.sh`.
 
 ### Configuration
 
