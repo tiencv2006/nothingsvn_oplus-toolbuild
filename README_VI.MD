@@ -125,6 +125,23 @@ install_toolbox=true    # Cài đặt KaoriOS Toolbox
 install_mods=true       # Áp dụng các bản mod tuỳ chỉnh
 ```
 
+## 📋 Nhật ký thay đổi
+
+### 🔖 Cập nhật mới nhất
+
+> [!NOTE]
+> Dựa trên phiên bản **v16.0.5** — Sửa lỗi & cải tiến
+
+- 🎙️ **Sửa lỗi gọi Gemini qua giọng nói** — Khắc phục lỗi không thể gọi Gemini bằng giọng nói
+- 🔧 **Sửa lỗi mất CTS & Gemini trên v16.0.5** — Khôi phục chứng nhận CTS và Gemini
+- ✍️ **Sửa lỗi viết AI không hoạt động** — Tính năng viết AI đã hoạt động bình thường
+- 📱 **Cập nhật ứng dụng Xem nhanh, Tìm kiếm ứng dụng, Ảnh, Thời tiết** — Sửa lỗi không dùng được widget, không đồng bộ được với Google Photos và một số lỗi khác
+- 🧰 **Cập nhật Toolbox mới nhất** — [@kousei_jp](https://t.me/Kousei_jp) *(chưa rõ ngày ra bản chính thức)*
+- 🏦 **Sửa lỗi một số ngân hàng không vào được** — Dựa vào Toolbox và ghi chú ở trên
+- 🌐 **Kích hoạt Cuộn & Dịch của Google CTS** — Ở phần tính năng dịch của Google
+
+---
+
 ## 👤 Tác giả
 
 <a href="https://github.com/tiencv2006">

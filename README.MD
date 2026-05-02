@@ -125,6 +125,23 @@ install_toolbox=true    # Install KaoriOS Toolbox
 install_mods=true       # Apply custom modifications
 ```
 
+## 📋 Changelogs
+
+### 🔖 Latest Update
+
+> [!NOTE]
+> Based on version **v16.0.5** — Fixes & improvements
+
+- 🎙️ **Fixed Gemini Voice Call** — Resolved issue with calling Gemini via voice
+- 🔧 **Fixed CTS & Gemini loss on v16.0.5** — Restored CTS certification and Gemini availability
+- ✍️ **Fixed AI Writing not working** — AI writing feature is now functional
+- 📱 **Updated Quick View, App Search, Photos, Weather apps** — Fixed widget issues, Google Photos sync failures, and various other bugs
+- 🧰 **Updated to latest KaoriOS Toolbox** — [@kousei_jp](https://t.me/Kousei_jp) *(official release date TBD)*
+- 🏦 **Fixed some banking apps not opening** — Based on Toolbox & notes above
+- 🌐 **Activated Google CTS Scroll & Translate** — Enabled in Google's translation feature section
+
+---
+
 ## 👤 Author
 
 <a href="https://github.com/tiencv2006">
